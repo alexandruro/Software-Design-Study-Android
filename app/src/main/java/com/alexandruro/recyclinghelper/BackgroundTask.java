@@ -1,7 +1,6 @@
 package com.alexandruro.recyclinghelper;
 
 import android.os.AsyncTask;
-import android.util.Log;
 import android.widget.TextView;
 
 import org.json.JSONObject;
@@ -57,6 +56,13 @@ public class BackgroundTask extends AsyncTask<String, Void, String> {
             if (method.equals("POST")) {
                 JSONObject postDataParams = new JSONObject();
                 postDataParams.put(parameter, value);
+
+                String username = "admin";
+                String password = "admin";
+
+                byte[] message = (username + ":" + password).getBytes("UTF-8");
+                String encoded = android.util.Base64.encodeToString(message, android.util.Base64.DEFAULT);
+                conn.setRequestProperty("AUTHORIZATION", "Basic " + encoded);
 
                 conn.setDoOutput(true);
 
