@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:showIn="navigation_view">
+
+    <item android:title="Testing">
+        <menu>
+            <item
+                android:id="@+id/nav_test_barcode"
+                android:icon="@drawable/ic_warning_black_24dp"
+                android:title="Barcode" />
+            <item
+                android:id="@+id/nav_test_http"
+                android:icon="@drawable/ic_warning_black_24dp"
+                android:title="GET/POST Request" />
+        </menu>
+    </item>
+
+    <group android:checkableBehavior="single">
+        <item
+            android:id="@+id/nav_dashboard"
+            android:icon="@drawable/ic_menu_camera"
+            android:title="Dashboard" />
+        <item
+            android:id="@+id/nav_account"
+            android:icon="@drawable/ic_menu_gallery"
+            android:title="Account" />
+        <item
+            android:id="@+id/nav_vouchers"
+            android:icon="@drawable/ic_menu_gallery"
+            android:title="Vouchers" />
+        <item
+            android:id="@+id/nav_tips"
+            android:icon="@drawable/ic_menu_gallery"
+            android:title="Tips and Guides" />
+        <item
+            android:id="@+id/nav_stats"
+            android:icon="@drawable/ic_menu_gallery"
+            android:title="Statistics" />
+        <item
+            android:id="@+id/nav_achievements"
+            android:icon="@drawable/ic_menu_gallery"
+            android:title="Achievements" />
+        <item
+            android:id="@+id/nav_settings"
+            android:icon="@drawable/ic_menu_gallery"
+            android:title="Settings" />
+        <item
+            android:id="@+id/nav_about"
+            android:icon="@drawable/ic_menu_gallery"
+            android:title="About" />
+    </group>
+
+    <item android:title="Actions">
+        <menu>
+            <item
+                android:id="@+id/nav_recycle"
+                android:icon="@drawable/ic_menu_camera"
+                android:title="Recycle" />
+            <item
+                android:id="@+id/nav_share"
+                android:icon="@drawable/ic_menu_share"
+                android:title="Share" />
+            <item
+                android:id="@+id/nav_send"
+                android:icon="@drawable/ic_menu_send"
+                android:title="Test reminder notification" />
+        </menu>
+    </item>
+
+</menu>

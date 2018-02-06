@@ -1,0 +1,72 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context="com.alexandruro.recyclinghelper.ServerConnectionFragment">
+
+    <TextView
+        android:id="@+id/resultTextView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignStart="@+id/resultCaption"
+        android:layout_below="@+id/resultCaption" />
+
+    <EditText
+        android:id="@+id/ipEditText"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="61dp"
+        android:ems="10"
+        android:inputType="textPersonName"
+        android:hint="IP address"
+        android:text="http://ptsv2.com/t/udi6h-1517782366/post"/>
+
+    <Button
+        android:id="@+id/button_get"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignStart="@+id/valueEditText"
+        android:layout_centerVertical="true"
+        android:text="GET" />
+
+    <Button
+        android:id="@+id/button_post"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignBaseline="@+id/button_get"
+        android:layout_alignBottom="@+id/button_get"
+        android:layout_alignEnd="@+id/ipEditText"
+        android:text="POST" />
+
+    <TextView
+        android:id="@+id/resultCaption"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignStart="@+id/button_get"
+        android:layout_below="@+id/button_get"
+        android:layout_marginTop="44dp"
+        android:text="Result:" />
+
+    <EditText
+        android:id="@+id/parameterEditText"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignStart="@+id/ipEditText"
+        android:layout_below="@+id/ipEditText"
+        android:ems="10"
+        android:inputType="textPersonName"
+        android:hint="Parameter (for post)" />
+
+    <EditText
+        android:id="@+id/valueEditText"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/parameterEditText"
+        android:layout_centerHorizontal="true"
+        android:ems="10"
+        android:inputType="textPersonName"
+        android:hint="Value (for post)" />
+
+</RelativeLayout>
