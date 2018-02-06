@@ -1,52 +1,19 @@
 package com.alexandruro.recyclinghelper;
 
-import android.Manifest;
 import android.content.Context;
-import android.content.pm.PackageManager;
 import android.net.Uri;
-import android.os.AsyncTask;
-import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
-import android.support.v4.content.ContextCompat;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
 import android.widget.TextView;
-import android.widget.Toast;
-
-import org.json.JSONObject;
-import org.w3c.dom.Text;
-
-import java.io.BufferedReader;
-import java.io.BufferedWriter;
-import java.io.DataOutputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.io.OutputStream;
-import java.io.OutputStreamWriter;
-import java.io.Reader;
-import java.io.UnsupportedEncodingException;
-import java.net.HttpURLConnection;
-import java.net.URL;
-import java.net.URLConnection;
-import java.net.URLEncoder;
-import java.nio.charset.StandardCharsets;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.LinkedHashMap;
-import java.util.Map;
-
-import javax.net.ssl.HttpsURLConnection;
 
 public class ServerConnectionFragment extends Fragment {
 
-    private static final String METHOD = "method";
+    private static final String EXTRA_BARCODE = "barcode";
 
-    private String method;
+    private String barcode;
 
     private OnFragmentInteractionListener mListener;
 
@@ -55,23 +22,30 @@ public class ServerConnectionFragment extends Fragment {
     }
 
     public static ServerConnectionFragment newInstance() {
+        return new ServerConnectionFragment();
+    }
+
+    public static ServerConnectionFragment newInstance(String barcode) {
         ServerConnectionFragment fragment = new ServerConnectionFragment();
-//        Bundle args = new Bundle();
-//        args.putString(METHOD, method);
-//        fragment.setArguments(args);
+        Bundle args = new Bundle();
+        args.putString(EXTRA_BARCODE, barcode);
+        fragment.setArguments(args);
         return fragment;
     }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        if (getArguments() != null)
+            barcode = getArguments().getString(EXTRA_BARCODE);
     }
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_server_connection, container, false);
+
+        // add listeners for the buttons
         (view.findViewById(R.id.button_get)).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -84,14 +58,15 @@ public class ServerConnectionFragment extends Fragment {
                 doPostRequest();
             }
         });
-        return view;
-    }
 
-    // TODO: Rename method, update argument and hook method into UI event
-    public void onButtonPressed(Uri uri) {
-        if (mListener != null) {
-            mListener.onFragmentInteraction(uri);
+        // Disable get button if we want to send a barcode
+        if (barcode != null) {
+            ((TextView) view.findViewById(R.id.parameterEditText)).setText(EXTRA_BARCODE);
+            ((TextView) view.findViewById(R.id.valueEditText)).setText(barcode);
+            view.findViewById(R.id.button_get).setEnabled(false);
         }
+
+        return view;
     }
 
     @Override
@@ -127,22 +102,17 @@ public class ServerConnectionFragment extends Fragment {
     }
 
     public void doGetRequest() {
+        String ip = ((TextView) getView().findViewById(R.id.ipEditText)).getText().toString();
 
-        String ip = ((TextView)getView().findViewById(R.id.ipEditText)).getText().toString();
-        TextView result = ((TextView)getView().findViewById(R.id.resultTextView));
-
-        new BackgroundTask(ip, "GET", result).execute();
-
+        new BackgroundTask(ip, "GET", this).execute();
     }
 
     public void doPostRequest() {
-        String ip = ((TextView)getView().findViewById(R.id.ipEditText)).getText().toString();
-        String parameter = ((TextView)getView().findViewById(R.id.parameterEditText)).getText().toString();
-        String value = ((TextView)getView().findViewById(R.id.valueEditText)).getText().toString();
-        TextView result = getView().findViewById(R.id.resultTextView);
+        String ip = ((TextView) getView().findViewById(R.id.ipEditText)).getText().toString();
+        String parameter = ((TextView) getView().findViewById(R.id.parameterEditText)).getText().toString();
+        String value = ((TextView) getView().findViewById(R.id.valueEditText)).getText().toString();
 
-        new BackgroundTask(ip, "POST", parameter, value, result).execute();
-
+        new BackgroundTask(ip, "POST", parameter, value, this).execute();
     }
 
 }
