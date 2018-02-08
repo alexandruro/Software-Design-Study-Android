@@ -109,10 +109,13 @@ public class ServerConnectionFragment extends Fragment {
 
     public void doPostRequest() {
         String ip = ((TextView) getView().findViewById(R.id.ipEditText)).getText().toString();
-        String parameter = ((TextView) getView().findViewById(R.id.parameterEditText)).getText().toString();
-        String value = ((TextView) getView().findViewById(R.id.valueEditText)).getText().toString();
+        String parameter1 = ((TextView) getView().findViewById(R.id.parameterEditText)).getText().toString();
+        String value1 = ((TextView) getView().findViewById(R.id.valueEditText)).getText().toString();
 
-        new BackgroundTask(ip, "POST", parameter, value, this).execute();
+        String parameter2 = ((TextView) getView().findViewById(R.id.parameter2EditText)).getText().toString();
+        String value2 = ((TextView) getView().findViewById(R.id.value2EditText)).getText().toString();
+
+        new BackgroundTask(ip, "POST", parameter1, value1, parameter2, value2, this).execute();
     }
 
 }

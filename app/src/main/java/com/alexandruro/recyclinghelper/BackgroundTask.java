@@ -22,8 +22,10 @@ public class BackgroundTask extends AsyncTask<String, Void, String> {
 
     private String ip;
     private String method;
-    private String parameter;
-    private String value;
+    private String parameter1;
+    private String value1;
+    private String parameter2;
+    private String value2;
 
     private WeakReference<ServerConnectionFragment> fragmentReference;
 
@@ -33,11 +35,13 @@ public class BackgroundTask extends AsyncTask<String, Void, String> {
         this.fragmentReference = new WeakReference<>(context);
     }
 
-    BackgroundTask(String ip, String method, String parameter, String value, ServerConnectionFragment context) {
+    BackgroundTask(String ip, String method, String parameter1, String value1, String parameter2, String value2, ServerConnectionFragment context) {
         this.ip = ip;
         this.method = method;
-        this.parameter = parameter;
-        this.value = value;
+        this.parameter1 = parameter1;
+        this.value1 = value1;
+        this.parameter2 = parameter2;
+        this.value2 = value2;
         this.fragmentReference = new WeakReference<>(context);
     }
 
@@ -55,14 +59,15 @@ public class BackgroundTask extends AsyncTask<String, Void, String> {
 
             if (method.equals("POST")) {
                 JSONObject postDataParams = new JSONObject();
-                postDataParams.put(parameter, value);
+                postDataParams.put(parameter1, value1);
+                postDataParams.put(parameter2, value2);
 
                 String username = "admin";
                 String password = "admin";
 
-                byte[] message = (username + ":" + password).getBytes("UTF-8");
-                String encoded = android.util.Base64.encodeToString(message, android.util.Base64.DEFAULT);
-                conn.setRequestProperty("AUTHORIZATION", "Basic " + encoded);
+//                byte[] message = (username + ":" + password).getBytes("UTF-8");
+//                String encoded = android.util.Base64.encodeToString(message, android.util.Base64.DEFAULT);
+//                conn.setRequestProperty("AUTHORIZATION", "Basic " + encoded);
 
                 conn.setDoOutput(true);
 

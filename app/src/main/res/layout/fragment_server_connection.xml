@@ -29,6 +29,7 @@
         android:layout_height="wrap_content"
         android:layout_alignStart="@+id/valueEditText"
         android:layout_centerVertical="true"
+        android:layout_below="@id/value2EditText"
         android:text="GET" />
 
     <Button
@@ -54,7 +55,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignStart="@+id/ipEditText"
-        android:layout_below="@+id/ipEditText"
+        android:layout_below="@id/ipEditText"
         android:ems="10"
         android:inputType="textPersonName"
         android:hint="Parameter (for post)" />
@@ -63,7 +64,27 @@
         android:id="@+id/valueEditText"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/parameterEditText"
+        android:layout_below="@id/parameterEditText"
+        android:layout_centerHorizontal="true"
+        android:ems="10"
+        android:inputType="textPersonName"
+        android:hint="Value (for post)" />
+
+    <EditText
+        android:id="@+id/parameter2EditText"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignStart="@+id/ipEditText"
+        android:layout_below="@id/valueEditText"
+        android:ems="10"
+        android:inputType="textPersonName"
+        android:hint="Parameter (for post)" />
+
+    <EditText
+        android:id="@+id/value2EditText"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/parameter2EditText"
         android:layout_centerHorizontal="true"
         android:ems="10"
         android:inputType="textPersonName"
