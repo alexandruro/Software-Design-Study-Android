@@ -9,7 +9,9 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
-public class ServerConnectionFragment extends Fragment {
+import java.util.jar.Attributes;
+
+public class ServerConnectionFragment extends Fragment implements NamedFragment, BackgroundTaskResult {
 
     private static final String EXTRA_BARCODE = "barcode";
 
@@ -84,6 +86,16 @@ public class ServerConnectionFragment extends Fragment {
     public void onDetach() {
         super.onDetach();
         mListener = null;
+    }
+
+    @Override
+    public String getFragmentName() {
+        return "serverConnection";
+    }
+
+    @Override
+    public void backgroundTaskResult(boolean success, String result) {
+        ((TextView) getView().findViewById(R.id.resultTextView)).setText(result);
     }
 
     /**

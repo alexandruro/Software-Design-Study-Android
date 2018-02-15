@@ -1,15 +1,14 @@
 package com.alexandruro.recyclinghelper;
 
 import android.app.NotificationChannel;
-import android.app.NotificationChannelGroup;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.app.TaskStackBuilder;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.net.Uri;
-import android.os.Build;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.NavigationView;
@@ -29,17 +28,41 @@ import android.widget.Toast;
 import com.google.android.gms.common.api.CommonStatusCodes;
 import com.google.android.gms.vision.barcode.Barcode;
 
-import java.util.Calendar;
-
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener,
         AccountFragment.OnFragmentInteractionListener,
         DashboardFragment.OnFragmentInteractionListener,
-        ServerConnectionFragment.OnFragmentInteractionListener {
+        ServerConnectionFragment.OnFragmentInteractionListener, BackgroundTaskResult {
 
     // request codes for starting BarcodeCaptureActivity
     public static final int BARCODE_TO_TEST = 0;
     public static final int BARCODE_TO_SEND = 1;
+
+    // for testing purposes
+    private static final int DEFAULT_XP = 35;
+
+    static int xp;
+
+    private static final String SERVER_IP = "http://demo2443003.mockable.io/";
+    //private static final String SERVER_IP = "https://httpbin.org/post";
+
+    public static int getXpGoal() {
+        return 200;
+    }
+
+    public void setXp(int newXp) {
+        xp = newXp;
+
+        SharedPreferences settings = getPreferences(0);
+        SharedPreferences.Editor editor = settings.edit();
+        editor.putInt("xp", xp);
+        editor.commit();
+
+        NamedFragment currentFragment = (NamedFragment) getSupportFragmentManager().findFragmentById(R.id.mainFrame);
+        if(currentFragment.getFragmentName().equals("dashboard"))
+            ((DashboardFragment)currentFragment).redrawPointsGoal();
+    }
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -49,7 +72,7 @@ public class MainActivity extends AppCompatActivity
         setSupportActionBar(toolbar);
 
         // FAB
-        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
+        FloatingActionButton fab = findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -59,7 +82,7 @@ public class MainActivity extends AppCompatActivity
         });
 
         // Drawer
-        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+        DrawerLayout drawer = findViewById(R.id.drawer_layout);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
                 this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
         drawer.addDrawerListener(toggle);
@@ -72,6 +95,10 @@ public class MainActivity extends AppCompatActivity
         FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
         ft.replace(R.id.mainFrame, new DashboardFragment());
         ft.commit();
+
+        // Restore preferences
+        SharedPreferences settings = getPreferences(0);
+        xp = settings.getInt("xp", DEFAULT_XP);
     }
 
     @Override
@@ -93,10 +120,14 @@ public class MainActivity extends AppCompatActivity
                     Barcode barcode = data.getParcelableExtra(BarcodeCaptureActivity.BarcodeObject);
 
                     if (requestCode == BARCODE_TO_SEND) {
-                        Fragment fragment = ServerConnectionFragment.newInstance(barcode.displayValue);
-                        FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
-                        ft.replace(R.id.mainFrame, fragment);
-                        ft.commitAllowingStateLoss();
+//                        Fragment fragment = ServerConnectionFragment.newInstance(barcode.displayValue);
+//                        FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
+//                        ft.replace(R.id.mainFrame, fragment);
+//                        ft.commitAllowingStateLoss();
+
+                        BackgroundTask backgroundTask = new BackgroundTask(SERVER_IP, "POST", "barcode", barcode.displayValue, this);
+                        backgroundTask.execute();
+
                     } else
                         Toast.makeText(this, barcode.displayValue, Toast.LENGTH_SHORT).show();
 
@@ -170,6 +201,14 @@ public class MainActivity extends AppCompatActivity
 
                 break;
 
+            case R.id.nav_test_add_xp:
+                setXp(xp+20);
+                break;
+
+            case R.id.nav_test_subtract_xp:
+                setXp(xp-20);
+                break;
+
             // Main menu
             case R.id.nav_dashboard:
                 fragment = new DashboardFragment();
@@ -201,5 +240,20 @@ public class MainActivity extends AppCompatActivity
     @Override
     public void onFragmentInteraction(Uri uri) {
 
+    }
+
+    @Override
+    public void backgroundTaskResult(boolean success, String result) {
+        if(success) {
+            if(result.equals("0"))
+                Toast.makeText(this, "The item is not recyclable.", Toast.LENGTH_SHORT).show();
+            else {
+                Toast.makeText(this, result + " points will be added to your account", Toast.LENGTH_SHORT).show();
+                setXp(xp+10);
+            }
+        }
+        else {
+            Toast.makeText(this, result, Toast.LENGTH_SHORT).show();
+        }
     }
 }

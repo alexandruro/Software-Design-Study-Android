@@ -15,6 +15,7 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 import java.net.URLEncoder;
 import java.util.Iterator;
+import java.util.Scanner;
 
 import javax.net.ssl.HttpsURLConnection;
 
@@ -27,22 +28,30 @@ public class BackgroundTask extends AsyncTask<String, Void, String> {
     private String parameter2;
     private String value2;
 
-    private WeakReference<ServerConnectionFragment> fragmentReference;
+    private BackgroundTaskResult context;
 
-    BackgroundTask(String ip, String method, ServerConnectionFragment context) {
+    BackgroundTask(String ip, String method, BackgroundTaskResult context) {
         this.ip = ip;
         this.method = method;
-        this.fragmentReference = new WeakReference<>(context);
+        this.context = context;
     }
 
-    BackgroundTask(String ip, String method, String parameter1, String value1, String parameter2, String value2, ServerConnectionFragment context) {
+    BackgroundTask(String ip, String method, String parameter1, String value1, String parameter2, String value2, BackgroundTaskResult context) {
         this.ip = ip;
         this.method = method;
         this.parameter1 = parameter1;
         this.value1 = value1;
         this.parameter2 = parameter2;
         this.value2 = value2;
-        this.fragmentReference = new WeakReference<>(context);
+        this.context = context;
+    }
+
+    BackgroundTask(String ip, String method, String parameter1, String value1, BackgroundTaskResult context) {
+        this.ip = ip;
+        this.method = method;
+        this.parameter1 = parameter1;
+        this.value1 = value1;
+        this.context = context;
     }
 
     protected void onPreExecute() {
@@ -60,7 +69,8 @@ public class BackgroundTask extends AsyncTask<String, Void, String> {
             if (method.equals("POST")) {
                 JSONObject postDataParams = new JSONObject();
                 postDataParams.put(parameter1, value1);
-                postDataParams.put(parameter2, value2);
+                if(parameter2==null || !parameter2.equals(""))
+                    postDataParams.put(parameter2, value2);
 
                 String username = "admin";
                 String password = "admin";
@@ -108,9 +118,11 @@ public class BackgroundTask extends AsyncTask<String, Void, String> {
 
     @Override
     protected void onPostExecute(String result) {
-        ServerConnectionFragment fragment = fragmentReference.get();
-        if (fragment != null)
-            ((TextView) fragment.getView().findViewById(R.id.resultTextView)).setText(result);
+        // TODO: figure out a better way
+        Scanner scanner = new Scanner(result);
+        if(scanner.hasNextInt())
+            context.backgroundTaskResult(true, result);
+        else context.backgroundTaskResult(false, result);
     }
 
     private String getPostDataString(JSONObject params) throws Exception {

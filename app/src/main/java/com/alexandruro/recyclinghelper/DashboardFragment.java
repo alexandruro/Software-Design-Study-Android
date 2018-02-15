@@ -9,6 +9,7 @@ import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
 
 import com.github.mikephil.charting.charts.BarChart;
 import com.github.mikephil.charting.components.XAxis;
@@ -16,6 +17,7 @@ import com.github.mikephil.charting.components.YAxis;
 import com.github.mikephil.charting.data.BarData;
 import com.github.mikephil.charting.data.BarDataSet;
 import com.github.mikephil.charting.data.BarEntry;
+import com.timqi.sectorprogressview.ColorfulRingProgressView;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -29,7 +31,7 @@ import java.util.List;
  * Use the {@link DashboardFragment#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class DashboardFragment extends Fragment {
+public class DashboardFragment extends Fragment implements NamedFragment {
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     private static final String ARG_PARAM1 = "param1";
@@ -66,6 +68,9 @@ public class DashboardFragment extends Fragment {
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
+
+        redrawPointsGoal();
+
         // Chart
         BarChart chart = (BarChart) getView().findViewById(R.id.chart);
 
@@ -98,6 +103,13 @@ public class DashboardFragment extends Fragment {
         chart.getLegend().setEnabled(false);
 
         chart.invalidate(); // refresh
+    }
+
+    public void redrawPointsGoal() {
+        ((TextView)getView().findViewById(R.id.xpGoalTextView)).setText(getResources().getString(R.string.xp_goal_caption, MainActivity.getXpGoal()));
+        ((TextView)getView().findViewById(R.id.xpTextView)).setText(getResources().getString(R.string.xp, MainActivity.xp));
+        ColorfulRingProgressView progressView = getView().findViewById(R.id.crpv);
+        progressView.setPercent((float)MainActivity.xp/MainActivity.getXpGoal()*100);
     }
 
     @Override
@@ -141,6 +153,11 @@ public class DashboardFragment extends Fragment {
     public void onDetach() {
         super.onDetach();
         mListener = null;
+    }
+
+    @Override
+    public String getFragmentName() {
+        return "dashboard";
     }
 
     /**

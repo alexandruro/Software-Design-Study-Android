@@ -21,6 +21,14 @@
                 android:id="@+id/nav_test_barcode_to_http"
                 android:icon="@drawable/ic_warning_black_24dp"
                 android:title="Scan &amp; Send barcode" />
+            <item
+                android:id="@+id/nav_test_add_xp"
+                android:icon="@drawable/ic_warning_black_24dp"
+                android:title="Add 20 points"/>
+            <item
+                android:id="@+id/nav_test_subtract_xp"
+                android:icon="@drawable/ic_warning_black_24dp"
+                android:title="Subtract 20 points"/>
         </menu>
     </item>
 

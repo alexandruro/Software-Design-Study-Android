@@ -17,7 +17,7 @@ import android.view.ViewGroup;
  * Use the {@link AccountFragment#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class AccountFragment extends Fragment {
+public class AccountFragment extends Fragment implements NamedFragment{
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     private static final String ARG_PARAM1 = "param1";
@@ -89,6 +89,11 @@ public class AccountFragment extends Fragment {
     public void onDetach() {
         super.onDetach();
         mListener = null;
+    }
+
+    @Override
+    public String getFragmentName() {
+        return "account";
     }
 
     /**
