@@ -1,6 +1,9 @@
 package com.alexandruro.recyclinghelper;
 
+import android.content.SharedPreferences;
 import android.os.AsyncTask;
+import android.preference.PreferenceManager;
+import android.util.Log;
 import android.widget.TextView;
 
 import org.json.JSONObject;
@@ -61,6 +64,12 @@ public class BackgroundTask extends AsyncTask<String, Void, String> {
 
         try {
 
+            SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences((MainActivity)context);
+            ip = settings.getString("serverIp", null);
+
+            if(ip==null || ip.equals(" ")) {
+                return "You did not set an Ip address";
+            }
             URL url = new URL(ip);
             HttpURLConnection conn = (HttpURLConnection) url.openConnection();
             conn.setRequestMethod(method);
@@ -72,18 +81,24 @@ public class BackgroundTask extends AsyncTask<String, Void, String> {
                 if(parameter2==null || !parameter2.equals(""))
                     postDataParams.put(parameter2, value2);
 
-                String username = "admin";
-                String password = "admin";
+                if(settings.getBoolean("httpAuth", false)) {
+                    String username = settings.getString("username:", null);
+                    String password = settings.getString("password:", null);
 
-//                byte[] message = (username + ":" + password).getBytes("UTF-8");
-//                String encoded = android.util.Base64.encodeToString(message, android.util.Base64.DEFAULT);
-//                conn.setRequestProperty("AUTHORIZATION", "Basic " + encoded);
+                    byte[] message = (username + ":" + password).getBytes("UTF-8");
+                    String encoded = android.util.Base64.encodeToString(message, android.util.Base64.DEFAULT);
+                    conn.setRequestProperty("AUTHORIZATION", "Basic " + encoded);
+                }
 
                 conn.setDoOutput(true);
 
                 OutputStream os = conn.getOutputStream();
-                BufferedWriter writer = new BufferedWriter(new OutputStreamWriter(os, "UTF-8"));
+                BufferedWriter writer; // = new BufferedWriter(new OutputStreamWriter(os, "UTF-8"));
+                writer = new BufferedWriter(new OutputStreamWriter(os));
                 writer.write(getPostDataString(postDataParams));
+
+                Log.d("log", getPostDataString(postDataParams));
+
                 writer.flush();
                 writer.close();
                 os.close();

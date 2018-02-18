@@ -59,7 +59,7 @@
             android:title="Achievements" />
         <item
             android:id="@+id/nav_settings"
-            android:icon="@drawable/ic_menu_gallery"
+            android:icon="@drawable/ic_menu_manage"
             android:title="Settings" />
         <item
             android:id="@+id/nav_about"
@@ -79,5 +79,7 @@
                 android:title="Share" />
         </menu>
     </item>
+
+
 
 </menu>

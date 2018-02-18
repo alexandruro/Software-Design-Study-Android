@@ -10,6 +10,7 @@ import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.net.Uri;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.NavigationView;
 import android.support.design.widget.Snackbar;
@@ -43,9 +44,6 @@ public class MainActivity extends AppCompatActivity
 
     static int xp;
 
-    private static final String SERVER_IP = "http://demo2443003.mockable.io/";
-    //private static final String SERVER_IP = "https://httpbin.org/post";
-
     public static int getXpGoal() {
         return 200;
     }
@@ -53,7 +51,9 @@ public class MainActivity extends AppCompatActivity
     public void setXp(int newXp) {
         xp = newXp;
 
-        SharedPreferences settings = getPreferences(0);
+
+        SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(this);
+
         SharedPreferences.Editor editor = settings.edit();
         editor.putInt("xp", xp);
         editor.commit();
@@ -96,9 +96,11 @@ public class MainActivity extends AppCompatActivity
         ft.replace(R.id.mainFrame, new DashboardFragment());
         ft.commit();
 
-        // Restore preferences
-        SharedPreferences settings = getPreferences(0);
+        // Restore preference
+        SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(this);
         xp = settings.getInt("xp", DEFAULT_XP);
+
+
     }
 
     @Override
@@ -125,7 +127,8 @@ public class MainActivity extends AppCompatActivity
 //                        ft.replace(R.id.mainFrame, fragment);
 //                        ft.commitAllowingStateLoss();
 
-                        BackgroundTask backgroundTask = new BackgroundTask(SERVER_IP, "POST", "barcode", barcode.displayValue, this);
+                        BackgroundTask backgroundTask = new BackgroundTask(null
+                                , "POST", "barcode", barcode.displayValue, this);
                         backgroundTask.execute();
 
                     } else
@@ -215,6 +218,10 @@ public class MainActivity extends AppCompatActivity
                 break;
             case R.id.nav_account:
                 fragment = new AccountFragment();
+                break;
+            case R.id.nav_settings:
+                Intent intent = new Intent(this, SettingsActivity.class);
+                startActivity(intent);
                 break;
         }
 
