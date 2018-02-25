@@ -22,18 +22,34 @@ import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Toast;
 
+import com.android.volley.Request;
+import com.android.volley.RequestQueue;
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
+import com.android.volley.toolbox.JsonObjectRequest;
+import com.android.volley.toolbox.StringRequest;
+import com.android.volley.toolbox.Volley;
 import com.google.android.gms.common.api.CommonStatusCodes;
 import com.google.android.gms.vision.barcode.Barcode;
+
+import org.json.JSONObject;
+
+import java.io.UnsupportedEncodingException;
+import java.net.URLEncoder;
 
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener,
         AccountFragment.OnFragmentInteractionListener,
         DashboardFragment.OnFragmentInteractionListener,
-        ServerConnectionFragment.OnFragmentInteractionListener, BackgroundTaskResult {
+        ServerConnectionFragment.OnFragmentInteractionListener,
+        ApiCallFragment.OnFragmentInteractionListener,
+        ShoppingListFragment.OnFragmentInteractionListener,
+        BackgroundTaskResult {
 
     // request codes for starting BarcodeCaptureActivity
     public static final int BARCODE_TO_TEST = 0;
@@ -59,8 +75,8 @@ public class MainActivity extends AppCompatActivity
         editor.commit();
 
         NamedFragment currentFragment = (NamedFragment) getSupportFragmentManager().findFragmentById(R.id.mainFrame);
-        if(currentFragment.getFragmentName().equals("dashboard"))
-            ((DashboardFragment)currentFragment).redrawPointsGoal();
+        if (currentFragment.getFragmentName().equals("dashboard"))
+            ((DashboardFragment) currentFragment).redrawPointsGoal();
     }
 
 
@@ -127,9 +143,56 @@ public class MainActivity extends AppCompatActivity
 //                        ft.replace(R.id.mainFrame, fragment);
 //                        ft.commitAllowingStateLoss();
 
-                        BackgroundTask backgroundTask = new BackgroundTask(null
-                                , "POST", "barcode", barcode.displayValue, this);
-                        backgroundTask.execute();
+                        Toast.makeText(this, "Sending barcode to the server..", Toast.LENGTH_SHORT).show();
+
+                        SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(this);
+                        String baseIp = settings.getString("serverIp", null);
+
+                        //localhost:4444/tables/items?query={"type":"select","columns":["item_id"],"conditions":[{"column":"barcode","compareOperator":"=","compareValue":6}]}
+                        String url = String.format("{\"type\":\"select\",\"columns\":[\"item_id\",\"name\"," +
+                                "\"IF(value > 0, TRUE, FALSE) as recyclable\"],\"conditions\":[{\"column\":\"barcode\"," +
+                                "\"compareOperator\":\"=\",\"compareValue\":\"%2$s\"}]}", baseIp, barcode.displayValue);
+                        String encodedurl = null;
+                        try {
+                            encodedurl = URLEncoder.encode(url, "UTF-8");
+                        } catch (UnsupportedEncodingException e) {
+                            e.printStackTrace();
+                        }
+                        encodedurl = "http://" + baseIp + "/tables/items?query=" + encodedurl;
+
+                        RequestQueue queue = Volley.newRequestQueue(this);
+                        StringRequest getRequest = new StringRequest(Request.Method.GET, encodedurl,
+                                new Response.Listener<String>() {
+                                    @Override
+                                    public void onResponse(String response) {
+                                        if(response.contains("could not find"))
+                                            Toast.makeText(MainActivity.this, "Could not find item in database", Toast.LENGTH_LONG).show();
+                                        else if(response.contains("NOT RECYCLABLE"))
+                                            Toast.makeText(MainActivity.this, "The item is not recyclable", Toast.LENGTH_LONG).show();
+                                        else {
+                                            //TODO: add points
+                                            Toast.makeText(MainActivity.this, "The item is recyclable", Toast.LENGTH_LONG).show();
+                                        }
+                                    }
+                                },
+                                new Response.ErrorListener() {
+                                    @Override
+                                    public void onErrorResponse(VolleyError error) {
+                                        if (error != null && error.getMessage() != null) {
+                                            Log.d("Error.Response", error.getMessage());
+                                            Toast.makeText(MainActivity.this, error.getMessage(), Toast.LENGTH_SHORT).show();
+                                        } else
+                                            Toast.makeText(MainActivity.this, "An unknown error occurred..", Toast.LENGTH_SHORT).show();
+                                    }
+                                }
+                        );
+
+                        queue.add(getRequest);
+
+
+//                        BackgroundTask backgroundTask = new BackgroundTask(null
+//                                , "POST", "barcode", barcode.displayValue, this);
+//                        backgroundTask.execute();
 
                     } else
                         Toast.makeText(this, barcode.displayValue, Toast.LENGTH_SHORT).show();
@@ -205,11 +268,19 @@ public class MainActivity extends AppCompatActivity
                 break;
 
             case R.id.nav_test_add_xp:
-                setXp(xp+20);
+                setXp(xp + 20);
                 break;
 
             case R.id.nav_test_subtract_xp:
-                setXp(xp-20);
+                setXp(xp - 20);
+                break;
+
+            case R.id.nav_test_api_call:
+                fragment = new ApiCallFragment();
+                break;
+
+            case R.id.nav_test_shopping_list:
+                fragment = new ShoppingListFragment();
                 break;
 
             // Main menu
@@ -251,15 +322,14 @@ public class MainActivity extends AppCompatActivity
 
     @Override
     public void backgroundTaskResult(boolean success, String result) {
-        if(success) {
-            if(result.equals("0"))
+        if (success) {
+            if (result.equals("0"))
                 Toast.makeText(this, "The item is not recyclable.", Toast.LENGTH_SHORT).show();
             else {
                 Toast.makeText(this, result + " points will be added to your account", Toast.LENGTH_SHORT).show();
-                setXp(xp+10);
+                setXp(xp + 10);
             }
-        }
-        else {
+        } else {
             Toast.makeText(this, result, Toast.LENGTH_SHORT).show();
         }
     }

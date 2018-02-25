@@ -64,20 +64,27 @@ public class BackgroundTask extends AsyncTask<String, Void, String> {
 
         try {
 
+///.../tables/tablename?type=select&columns={}&conditions={};
+
             SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences((MainActivity)context);
             ip = settings.getString("serverIp", null);
+
+            String unencodedUrl = String.format("http://%1$s/tables/items?type=select&columns={value}&conditions={barcode=%2$s}", ip, "6");
+
+            String encodedurl = URLEncoder.encode(unencodedUrl, "UTF-8");
+
 
             if(ip==null || ip.equals(" ")) {
                 return "You did not set an Ip address";
             }
-            URL url = new URL(ip);
+            URL url = new URL(encodedurl);
             HttpURLConnection conn = (HttpURLConnection) url.openConnection();
             conn.setRequestMethod(method);
             conn.setDoInput(true);
 
             if (method.equals("POST")) {
                 JSONObject postDataParams = new JSONObject();
-                postDataParams.put(parameter1, value1);
+                //postDataParams.put(parameter1, value1);
                 if(parameter2==null || !parameter2.equals(""))
                     postDataParams.put(parameter2, value2);
 

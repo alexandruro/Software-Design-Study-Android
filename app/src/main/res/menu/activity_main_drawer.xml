@@ -29,6 +29,15 @@
                 android:id="@+id/nav_test_subtract_xp"
                 android:icon="@drawable/ic_warning_black_24dp"
                 android:title="Subtract 20 points"/>
+            <item
+                android:id="@+id/nav_test_api_call"
+                android:icon="@drawable/ic_warning_black_24dp"
+                android:title="Call API"/>
+            <item
+                android:id="@+id/nav_test_shopping_list"
+                android:icon="@drawable/ic_warning_black_24dp"
+                android:title="Show shopping list"/>
+
         </menu>
     </item>
 
