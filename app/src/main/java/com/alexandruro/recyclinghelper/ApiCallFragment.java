@@ -94,6 +94,7 @@ public class ApiCallFragment extends Fragment {
                 callApi();
             }
         });
+        getActivity().setTitle("API Call");
         return view;
     }
 

@@ -69,6 +69,7 @@ public class PointsFragment extends Fragment {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_points, container, false);
         ((TextView)view.findViewById(R.id.pointsTextView)).setText(MainActivity.xp + " points");
+        getActivity().setTitle("Points");
         return view;
     }
 

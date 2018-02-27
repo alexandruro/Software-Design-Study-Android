@@ -68,6 +68,8 @@ public class ServerConnectionFragment extends Fragment implements NamedFragment,
             view.findViewById(R.id.button_get).setEnabled(false);
         }
 
+        getActivity().setTitle("Server request");
+
         return view;
     }
 

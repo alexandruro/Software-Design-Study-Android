@@ -76,6 +76,8 @@ public class ShoppingListFragment extends Fragment implements NamedFragment {
                 }
         );
 
+        getActivity().setTitle("Shopping list");
+
         return view;
     }
 
