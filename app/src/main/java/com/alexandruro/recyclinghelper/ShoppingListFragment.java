@@ -12,6 +12,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Adapter;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.Toast;
@@ -32,7 +33,7 @@ import org.json.JSONObject;
 import java.util.ArrayList;
 
 
-public class ShoppingListFragment extends Fragment {
+public class ShoppingListFragment extends Fragment implements NamedFragment {
 
     private OnFragmentInteractionListener mListener;
 
@@ -57,6 +58,13 @@ public class ShoppingListFragment extends Fragment {
         getShoppingList(shoppingList, adapter);
 
         ((ListView)view.findViewById(R.id.shopping_list_view)).setAdapter(adapter);
+
+        ((Button)view.findViewById(R.id.clearShoppingListButton)).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+            }
+        });
         return view;
     }
 
@@ -72,25 +80,40 @@ public class ShoppingListFragment extends Fragment {
             return;
         }
 
-        String url = String.format("http://%1$s/tables/shoppings?user_id=1", baseIp);
+        String url = "http://" + baseIp + "/tables/shoppings?query=%7B%22type%22%3A%22select%22%2C%22columns%22%3A%5B%22item_id%22%5D%7D";
 
-        JsonObjectRequest request = new JsonObjectRequest(Request.Method.GET, url, null,
-                new Response.Listener<JSONObject>()
+        StringRequest request = new StringRequest(Request.Method.GET, url,
+                new Response.Listener<String>()
                 {
                     @Override
-                    public void onResponse(JSONObject response) {
+                    public void onResponse(String response) {
                         // TODO: interpret json
+
+                        if(response.contains("not found")) {
+                            // TODO: show "empty list" message
+                            Toast.makeText(getActivity(), "The shopping list is empty", Toast.LENGTH_SHORT).show();
+                            return;
+                        }
+
+                        /*
+                        found:
+                        {"entries":[{"item_id":13,"barcode":5000204689204,"value":25}]}
+                         */
 
                         JSONArray items = null;
                         try {
-                            items = response.getJSONArray("items");
+                            JSONObject jsonObject = new JSONObject(response.split("\n")[1]);
+                            items = jsonObject.getJSONArray("entries");
+                            for(int i=0;i<items.length();i++) {
+                                String barcode = ((JSONObject)items.get(i)).getString("barcode");
+                                //callApi(adaptedList, adapter, "5000204689204");
+                                callApi(adaptedList, adapter, barcode);
+                            }
                         } catch (JSONException e) {
                             e.printStackTrace();
                         }
-                        for(int i=0;i<items.length();i++) {
-                            //serverShoppingList.add();
-                            callApi(adaptedList, adapter, "5000204689204");
-                        }
+
+
 
                     }
                 },
@@ -102,13 +125,13 @@ public class ShoppingListFragment extends Fragment {
                         //serverShoppingList.add("5000204689204");
                         callApi(adaptedList, adapter, "5000204689204");
                         // TODO: throw error
-//                        if(error!=null && error.getMessage()!=null) {
-//                            Log.d("Error.Response", error.getMessage());
-//                            result.setText(error.getMessage());
-//                        }
-//                        else {
-//                            result.setText("Unknown error...");
-//                        }
+                        if(error!=null && error.getMessage()!=null) {
+                            Log.d("Error.Response", error.getMessage());
+                            Toast.makeText(getActivity(), error.getMessage(), Toast.LENGTH_SHORT).show();
+                        }
+                        else {
+                            Toast.makeText(getActivity(), "Unknown error..", Toast.LENGTH_SHORT).show();
+                        }
                     }
                 }
         );
@@ -117,7 +140,7 @@ public class ShoppingListFragment extends Fragment {
 
     private void callApi(final ArrayList<ShoppingItem> shoppingList, final ShoppingListAdapter adapter, String barcode) {
         final RequestQueue queue = Volley.newRequestQueue(getActivity());
-        String url ="https://www.barcodelookup.com/restapi?barcode=" + barcode + "&key=bmyr57rmfmkq9to5trj8tyrofufw1z";
+        String url ="https://www.barcodelookup.com/restapi?barcode=" + barcode + "&key=jifwdohph0d96leisdxhdtjnc3xapk";
 
 
         JsonObjectRequest jsObjRequest = new JsonObjectRequest
@@ -179,6 +202,11 @@ public class ShoppingListFragment extends Fragment {
     public void onDetach() {
         super.onDetach();
         mListener = null;
+    }
+
+    @Override
+    public String getFragmentName() {
+        return "shoppingList";
     }
 
     /**

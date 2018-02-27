@@ -4,6 +4,7 @@ import android.app.NotificationChannel;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.app.TaskStackBuilder;
+import android.app.VoiceInteractor;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -37,6 +38,7 @@ import com.android.volley.toolbox.Volley;
 import com.google.android.gms.common.api.CommonStatusCodes;
 import com.google.android.gms.vision.barcode.Barcode;
 
+import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.UnsupportedEncodingException;
@@ -92,8 +94,7 @@ public class MainActivity extends AppCompatActivity
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Snackbar.make(view, "This will launch the camera", Snackbar.LENGTH_LONG)
-                        .setAction("Action", null).show();
+                startBarcodeCaptureActivity(true, false, BARCODE_TO_SEND);
             }
         });
 
@@ -146,21 +147,23 @@ public class MainActivity extends AppCompatActivity
                         Toast.makeText(this, "Sending barcode to the server..", Toast.LENGTH_SHORT).show();
 
                         SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(this);
-                        String baseIp = settings.getString("serverIp", null);
+                        final String baseIp = settings.getString("serverIp", null);
 
                         //localhost:4444/tables/items?query={"type":"select","columns":["item_id"],"conditions":[{"column":"barcode","compareOperator":"=","compareValue":6}]}
-                        String url = String.format("{\"type\":\"select\",\"columns\":[\"item_id\",\"name\"," +
+                        //localhost:4444/tables/items?query={"type":"select","columns":["item_id","name","IF(value>0,TRUE,FALSE) as recyclable],"conditions":[{"column":"barcode","compareOperator":"=","compareValue":6}]}
+                        final String query = String.format("{\"type\":\"select\",\"columns\":[\"item_id\",\"name\",\"value\"," +
                                 "\"IF(value > 0, TRUE, FALSE) as recyclable\"],\"conditions\":[{\"column\":\"barcode\"," +
-                                "\"compareOperator\":\"=\",\"compareValue\":\"%2$s\"}]}", baseIp, barcode.displayValue);
-                        String encodedurl = null;
+                                "\"compareOperator\":\"=\",\"compareValue\":\"%1$s\"}]}", barcode.displayValue);
+
+                        String encodedquery = null;
                         try {
-                            encodedurl = URLEncoder.encode(url, "UTF-8");
+                            encodedquery = URLEncoder.encode(query, "UTF-8");
                         } catch (UnsupportedEncodingException e) {
                             e.printStackTrace();
                         }
-                        encodedurl = "http://" + baseIp + "/tables/items?query=" + encodedurl;
+                        String encodedurl = "http://" + baseIp + "/tables/items?query=" + encodedquery;
 
-                        RequestQueue queue = Volley.newRequestQueue(this);
+                        final RequestQueue queue = Volley.newRequestQueue(this);
                         StringRequest getRequest = new StringRequest(Request.Method.GET, encodedurl,
                                 new Response.Listener<String>() {
                                     @Override
@@ -170,8 +173,29 @@ public class MainActivity extends AppCompatActivity
                                         else if(response.contains("NOT RECYCLABLE"))
                                             Toast.makeText(MainActivity.this, "The item is not recyclable", Toast.LENGTH_LONG).show();
                                         else {
-                                            //TODO: add points
-                                            Toast.makeText(MainActivity.this, "The item is recyclable", Toast.LENGTH_LONG).show();
+                                            //Toast.makeText(MainActivity.this, "The item is recyclable", Toast.LENGTH_LONG).show();
+                                            try {
+                                                JSONObject jsonObject = new JSONObject(response.split("\n")[2]);
+                                                JSONObject entry = (JSONObject)jsonObject.getJSONArray("entries").get(0);
+                                                int value = entry.getInt("value");
+                                                Toast.makeText(MainActivity.this, "The item is recyclable. " + value + " points were added to your account.", Toast.LENGTH_LONG).show();
+                                                setXp(xp + value);
+                                                int user_id = entry.getInt("item_id");
+
+                                                // Add to shopping list
+                                                String query = String.format("{\"type\":\"insert\",\"columns\":[\"user_id\",\"item_id\"],\"values\":[1,%1$d]}", user_id);
+                                                String encodedquery = null;
+                                                try {
+                                                    encodedquery = URLEncoder.encode(query, "UTF-8");
+                                                } catch (UnsupportedEncodingException e) {
+                                                    e.printStackTrace();
+                                                }
+                                                String encodedurl = "http://" + baseIp + "/tables/shoppings?query=" + encodedquery;
+                                                query_add_shopping(queue, encodedurl);
+                                            } catch (JSONException e) {
+                                                e.printStackTrace();
+                                                Toast.makeText(MainActivity.this, "it failed", Toast.LENGTH_SHORT).show();
+                                            }
                                         }
                                     }
                                 },
@@ -203,6 +227,23 @@ public class MainActivity extends AppCompatActivity
                 Toast.makeText(this, "Error: barcode detection unsuccessful", Toast.LENGTH_SHORT).show();
         else
             super.onActivityResult(requestCode, resultCode, data);
+    }
+
+    private void query_add_shopping(RequestQueue queue, String url) {
+        StringRequest request = new StringRequest(Request.Method.POST, url,
+                new Response.Listener<String>() {
+                    @Override
+                    public void onResponse(String response) {
+                        Toast.makeText(MainActivity.this, "Added to shopping list", Toast.LENGTH_LONG).show();
+                    }
+                },
+                new Response.ErrorListener() {
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+                        Toast.makeText(MainActivity.this, "Could not add to shopping list", Toast.LENGTH_LONG).show();
+                    }
+                });
+        queue.add(request);
     }
 
     @Override

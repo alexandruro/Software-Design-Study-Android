@@ -1,10 +1,40 @@
 <PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
 
+    <PreferenceCategory android:title="Push notifications"/>
+
     <SwitchPreference
+        android:title="Pop up notifications"
         android:defaultValue="false"
-        android:key="httpAuth"
-        android:summary="Authentication"
-        android:title="Enable HTTP Authentication"/>
+        android:summary="Tips and News"/>
+
+    <SwitchPreference
+        android:title="Account activity"
+        android:defaultValue="false"
+        android:summary="Changes made to your account"/>
+
+    <SwitchPreference
+        android:title="Feature announcement"
+        android:defaultValue="false"
+        android:summary="Feature updates and more"/>
+
+    <SwitchPreference
+        android:title="Discounts"
+        android:defaultValue="false"
+        android:summary="Point and discount alerts"/>
+
+    <PreferenceCategory android:title="Social media notifications"/>
+
+    <SwitchPreference
+        android:title="Rewards"
+        android:defaultValue="false"
+        android:summary="From friends"/>
+
+    <SwitchPreference
+        android:title="Account activity"
+        android:defaultValue="false"
+        android:summary="Changes made to your account"/>
+
+    <PreferenceCategory android:title="Account settings"/>
 
     <!-- NOTE: EditTextPreference accepts EditText attributes. -->
     <!-- NOTE: EditTextPreference's summary should be set to its value by the activity code. -->
@@ -27,6 +57,14 @@
         android:selectAllOnFocus="true"
         android:singleLine="true"
         android:title="Password"/>
+
+    <PreferenceCategory android:title="Developer settings"/>
+
+    <SwitchPreference
+        android:defaultValue="false"
+        android:key="httpAuth"
+        android:summary="Authentication"
+        android:title="Enable HTTP Authentication"/>
 
     <EditTextPreference
         android:capitalize="words"
