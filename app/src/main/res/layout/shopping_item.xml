@@ -27,4 +27,11 @@
         android:layout_height="match_parent"
         android:gravity="fill_vertical"
         android:padding="8dp" />
+
+    <Button
+        android:id="@+id/remove_button"
+        android:background="@android:drawable/ic_delete"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:gravity="right"/>
 </LinearLayout>

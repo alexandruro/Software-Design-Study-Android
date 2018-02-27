@@ -2,10 +2,19 @@
     android:layout_height="wrap_content"
     xmlns:android="http://schemas.android.com/apk/res/android">
 
+    <android.support.v4.widget.SwipeRefreshLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/swiperefreshlayout">
+
         <ListView
             android:id="@+id/shopping_list_view"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content" />
+
+
+    </android.support.v4.widget.SwipeRefreshLayout>
+
 
     <Button
         android:id="@+id/clearShoppingListButton"
@@ -13,7 +22,7 @@
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
         android:layout_centerHorizontal="true"
-        android:padding="16dp"
-        android:text="Button" />
+        android:layout_margin="16dp"
+        android:text="Remove all" />
 
     </RelativeLayout>

@@ -51,6 +51,7 @@ public class MainActivity extends AppCompatActivity
         ServerConnectionFragment.OnFragmentInteractionListener,
         ApiCallFragment.OnFragmentInteractionListener,
         ShoppingListFragment.OnFragmentInteractionListener,
+        PointsFragment.OnFragmentInteractionListener,
         BackgroundTaskResult {
 
     // request codes for starting BarcodeCaptureActivity
@@ -252,15 +253,15 @@ public class MainActivity extends AppCompatActivity
 
         switch (item.getItemId()) {
             // Testing menu
-            case R.id.nav_test_http:
-                fragment = ServerConnectionFragment.newInstance();
-                break;
-            case R.id.nav_test_barcode:
-                startBarcodeCaptureActivity(true, false, BARCODE_TO_TEST);
-                break;
-            case R.id.nav_test_barcode_to_http:
-                startBarcodeCaptureActivity(true, false, BARCODE_TO_SEND);
-                break;
+//            case R.id.nav_test_http:
+//                fragment = ServerConnectionFragment.newInstance();
+//                break;
+//            case R.id.nav_test_barcode:
+//                startBarcodeCaptureActivity(true, false, BARCODE_TO_TEST);
+//                break;
+//            case R.id.nav_test_barcode_to_http:
+//                startBarcodeCaptureActivity(true, false, BARCODE_TO_SEND);
+//                break;
             case R.id.nav_send:
 
                 // Create notification channel
@@ -316,12 +317,16 @@ public class MainActivity extends AppCompatActivity
                 setXp(xp - 20);
                 break;
 
-            case R.id.nav_test_api_call:
-                fragment = new ApiCallFragment();
-                break;
+//            case R.id.nav_test_api_call:
+//                fragment = new ApiCallFragment();
+//                break;
 
             case R.id.nav_test_shopping_list:
                 fragment = new ShoppingListFragment();
+                break;
+
+            case R.id.nav_test_points:
+                fragment = new PointsFragment();
                 break;
 
             // Main menu

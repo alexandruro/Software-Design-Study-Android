@@ -7,6 +7,7 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.v4.app.Fragment;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -65,6 +66,16 @@ public class ShoppingListFragment extends Fragment implements NamedFragment {
 
             }
         });
+
+        ((SwipeRefreshLayout)view.findViewById(R.id.swiperefreshlayout)).setOnRefreshListener(
+                new SwipeRefreshLayout.OnRefreshListener() {
+                    @Override
+                    public void onRefresh() {
+                        // TODO: refresh
+                    }
+                }
+        );
+
         return view;
     }
 
