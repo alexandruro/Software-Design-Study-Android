@@ -38,6 +38,8 @@ public class ShoppingListFragment extends Fragment implements NamedFragment {
 
     private OnFragmentInteractionListener mListener;
 
+    RequestQueue queue;
+
     public ShoppingListFragment() {
         // Required empty public constructor
     }
@@ -77,6 +79,8 @@ public class ShoppingListFragment extends Fragment implements NamedFragment {
         );
 
         getActivity().setTitle("Shopping list");
+
+        queue = Volley.newRequestQueue(getActivity());
 
         return view;
     }
@@ -136,14 +140,15 @@ public class ShoppingListFragment extends Fragment implements NamedFragment {
                     public void onErrorResponse(VolleyError error) {
                         // TODO: delete this once it works
                         //serverShoppingList.add("5000204689204");
-                        callApi(adaptedList, adapter, "5000204689204");
+                        //callApi(adaptedList, adapter, "5000204689204");
                         // TODO: throw error
                         if(error!=null && error.getMessage()!=null) {
                             Log.d("Error.Response", error.getMessage());
-                            Toast.makeText(getActivity(), error.getMessage(), Toast.LENGTH_SHORT).show();
+                            Toast.makeText(getContext(), error.getMessage(), Toast.LENGTH_SHORT).show();
                         }
                         else {
-                            Toast.makeText(getActivity(), "Unknown error..", Toast.LENGTH_SHORT).show();
+                            if(getContext()!=null)
+                                Toast.makeText(getContext(), "Unknown error..", Toast.LENGTH_SHORT).show();
                         }
                     }
                 }
@@ -152,7 +157,7 @@ public class ShoppingListFragment extends Fragment implements NamedFragment {
     }
 
     private void callApi(final ArrayList<ShoppingItem> shoppingList, final ShoppingListAdapter adapter, String barcode) {
-        final RequestQueue queue = Volley.newRequestQueue(getActivity());
+
         String url ="https://www.barcodelookup.com/restapi?barcode=" + barcode + "&key=jifwdohph0d96leisdxhdtjnc3xapk";
 
 
@@ -215,6 +220,9 @@ public class ShoppingListFragment extends Fragment implements NamedFragment {
     public void onDetach() {
         super.onDetach();
         mListener = null;
+        if (queue != null) {
+            queue.cancelAll(this);
+        }
     }
 
     @Override
@@ -236,4 +244,5 @@ public class ShoppingListFragment extends Fragment implements NamedFragment {
         // TODO: Update argument type and name
         void onFragmentInteraction(Uri uri);
     }
+
 }

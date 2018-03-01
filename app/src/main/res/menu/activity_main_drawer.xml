@@ -3,24 +3,37 @@
     xmlns:tools="http://schemas.android.com/tools"
     tools:showIn="navigation_view">
 
+    <group android:checkableBehavior="single">
+        <item
+            android:id="@+id/nav_dashboard"
+            android:icon="@drawable/ic_menu_camera"
+            android:title="Dashboard" />
+        <item
+            android:id="@+id/nav_test_points"
+            android:icon="@drawable/ic_warning_black_24dp"
+            android:title="Points"/>
+        <item
+            android:id="@+id/nav_assistant"
+            android:icon="@drawable/ic_warning_black_24dp"
+            android:title="Assistant"/>
+        <item
+            android:id="@+id/nav_test_shopping_list"
+            android:icon="@drawable/ic_warning_black_24dp"
+            android:title="Shopping list"/>
+        <item
+            android:checkable="false"
+            android:id="@+id/nav_settings"
+            android:icon="@drawable/ic_menu_manage"
+            android:title="Settings" />
+
+    </group>
+
     <item android:title="Testing">
         <menu>
             <item
                 android:id="@+id/nav_send"
                 android:icon="@drawable/ic_warning_black_24dp"
                 android:title="Reminder notification" />
-            <!--<item-->
-                <!--android:id="@+id/nav_test_barcode"-->
-                <!--android:icon="@drawable/ic_warning_black_24dp"-->
-                <!--android:title="Barcode" />-->
-            <!--<item-->
-                <!--android:id="@+id/nav_test_http"-->
-                <!--android:icon="@drawable/ic_warning_black_24dp"-->
-                <!--android:title="GET/POST Request" />-->
-            <!--<item-->
-                <!--android:id="@+id/nav_test_barcode_to_http"-->
-                <!--android:icon="@drawable/ic_warning_black_24dp"-->
-                <!--android:title="Scan &amp; Send barcode" />-->
             <item
                 android:id="@+id/nav_test_add_xp"
                 android:icon="@drawable/ic_warning_black_24dp"
@@ -29,28 +42,29 @@
                 android:id="@+id/nav_test_subtract_xp"
                 android:icon="@drawable/ic_warning_black_24dp"
                 android:title="Subtract 20 points"/>
-            <!--<item-->
-                <!--android:id="@+id/nav_test_api_call"-->
-                <!--android:icon="@drawable/ic_warning_black_24dp"-->
-                <!--android:title="Call API"/>-->
-            <item
-                android:id="@+id/nav_test_shopping_list"
-                android:icon="@drawable/ic_warning_black_24dp"
-                android:title="Show shopping list"/>
 
-            <item
-                android:id="@+id/nav_test_points"
-                android:icon="@drawable/ic_warning_black_24dp"
-                android:title="Points"/>
+            <!--<item-->
+            <!--android:id="@+id/nav_test_barcode"-->
+            <!--android:icon="@drawable/ic_warning_black_24dp"-->
+            <!--android:title="Barcode" />-->
+            <!--<item-->
+            <!--android:id="@+id/nav_test_http"-->
+            <!--android:icon="@drawable/ic_warning_black_24dp"-->
+            <!--android:title="GET/POST Request" />-->
+            <!--<item-->
+            <!--android:id="@+id/nav_test_barcode_to_http"-->
+            <!--android:icon="@drawable/ic_warning_black_24dp"-->
+            <!--android:title="Scan &amp; Send barcode" />-->
+
+            <!--<item-->
+            <!--android:id="@+id/nav_test_api_call"-->
+            <!--android:icon="@drawable/ic_warning_black_24dp"-->
+            <!--android:title="Call API"/>-->
 
         </menu>
     </item>
 
-    <group android:checkableBehavior="single">
-        <item
-            android:id="@+id/nav_dashboard"
-            android:icon="@drawable/ic_menu_camera"
-            android:title="Dashboard" />
+    <group android:enabled="false">
         <item
             android:id="@+id/nav_account"
             android:icon="@drawable/ic_menu_gallery"
@@ -72,16 +86,12 @@
             android:icon="@drawable/ic_menu_gallery"
             android:title="Achievements" />
         <item
-            android:id="@+id/nav_settings"
-            android:icon="@drawable/ic_menu_manage"
-            android:title="Settings" />
-        <item
             android:id="@+id/nav_about"
             android:icon="@drawable/ic_menu_gallery"
             android:title="About" />
     </group>
 
-    <item android:title="Actions">
+    <item android:title="Actions" android:enabled="false">
         <menu>
             <item
                 android:id="@+id/nav_recycle"

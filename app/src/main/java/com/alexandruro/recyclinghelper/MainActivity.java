@@ -52,6 +52,7 @@ public class MainActivity extends AppCompatActivity
         ApiCallFragment.OnFragmentInteractionListener,
         ShoppingListFragment.OnFragmentInteractionListener,
         PointsFragment.OnFragmentInteractionListener,
+        AssistantFragment.OnFragmentInteractionListener,
         BackgroundTaskResult {
 
     // request codes for starting BarcodeCaptureActivity
@@ -321,18 +322,23 @@ public class MainActivity extends AppCompatActivity
 //                fragment = new ApiCallFragment();
 //                break;
 
-            case R.id.nav_test_shopping_list:
-                fragment = new ShoppingListFragment();
-                break;
 
-            case R.id.nav_test_points:
-                fragment = new PointsFragment();
-                break;
 
             // Main menu
             case R.id.nav_dashboard:
                 fragment = new DashboardFragment();
                 break;
+            case R.id.nav_test_shopping_list:
+                fragment = new ShoppingListFragment();
+                break;
+            case R.id.nav_test_points:
+                fragment = new PointsFragment();
+                break;
+            case R.id.nav_assistant:
+                fragment = new AssistantFragment();
+                break;
+
+
             case R.id.nav_account:
                 fragment = new AccountFragment();
                 break;
