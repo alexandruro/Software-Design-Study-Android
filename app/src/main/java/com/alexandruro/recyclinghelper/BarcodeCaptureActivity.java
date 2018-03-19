@@ -134,7 +134,7 @@ public final class BarcodeCaptureActivity extends AppCompatActivity implements B
         };
 
         findViewById(R.id.topLayout).setOnClickListener(listener);
-        Snackbar.make(mGraphicOverlay, "plm nu stiu ce e aici",
+        Snackbar.make(mGraphicOverlay, "",
                 Snackbar.LENGTH_INDEFINITE)
                 .setAction("ok", listener)
                 .show();
@@ -198,7 +198,7 @@ public final class BarcodeCaptureActivity extends AppCompatActivity implements B
         // at long distances.
         CameraSource.Builder builder = new CameraSource.Builder(getApplicationContext(), barcodeDetector)
                 .setFacing(CameraSource.CAMERA_FACING_BACK)
-                .setRequestedPreviewSize(1600, 1024)
+                .setRequestedPreviewSize(1230, 720)
                 .setRequestedFps(15.0f);
 
         // make sure that auto focus is an available option

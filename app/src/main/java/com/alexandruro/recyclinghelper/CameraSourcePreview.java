@@ -29,7 +29,7 @@ import com.google.android.gms.common.images.Size;
 
 import java.io.IOException;
 
-public class CameraSourcePreview extends ViewGroup {
+public class        CameraSourcePreview extends ViewGroup {
     private static final String TAG = "CameraSourcePreview";
 
     private Context mContext;
@@ -130,7 +130,7 @@ public class CameraSourcePreview extends ViewGroup {
 
     @Override
     protected void onLayout(boolean changed, int left, int top, int right, int bottom) {
-        int width = 320;
+        int width = 410; // 56 +
         int height = 240;
         if (mCameraSource != null) {
             Size size = mCameraSource.getPreviewSize();
@@ -156,10 +156,10 @@ public class CameraSourcePreview extends ViewGroup {
         int childHeight = (int)(((float) layoutWidth / (float) width) * height);
 
         // If height is too tall using fit width, does fit height instead.
-        if (childHeight > layoutHeight) {
-            childHeight = layoutHeight;
-            childWidth = (int)(((float) layoutHeight / (float) height) * width);
-        }
+//        if (childHeight > layoutHeight) {
+//            childHeight = layoutHeight;
+//            childWidth = (int)(((float) layoutHeight / (float) height) * width);
+//        }
 
         for (int i = 0; i < getChildCount(); ++i) {
             getChildAt(i).layout(0, 0, childWidth, childHeight);

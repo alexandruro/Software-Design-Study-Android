@@ -5,7 +5,7 @@
     android:layout_height="match_parent"
     tools:context="com.alexandruro.recyclinghelper.DashboardFragment">
 
-    <android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
         xmlns:app="http://schemas.android.com/apk/res-auto"
         xmlns:tools="http://schemas.android.com/tools"
         android:layout_width="match_parent"
@@ -15,45 +15,23 @@
         tools:showIn="@layout/app_bar_main">
 
         <TextView
-            android:id="@+id/textView3"
+            android:id="@+id/titleTextView"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_alignParentTop="true"
+            android:layout_centerHorizontal="true"
             android:text="Welcome back, Alex!"
-            android:textAppearance="@style/TextAppearance.AppCompat.Display1"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintLeft_toLeftOf="parent"
-            app:layout_constraintRight_toRightOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintVertical_bias="0.034" />
-
-        <TextView
-            android:id="@+id/textView2"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginEnd="8dp"
-            android:layout_marginStart="8dp"
-            android:layout_marginTop="0dp"
-            android:text="Your stats:"
-            android:textAppearance="@style/TextAppearance.AppCompat.Body2"
-            app:layout_constraintBottom_toTopOf="@id/cardView"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/textView3" />
+            android:textAppearance="@style/TextAppearance.AppCompat.Display1" />
 
         <android.support.v7.widget.CardView
             android:id="@+id/cardView"
-            android:layout_width="0dp"
-            android:layout_height="0dp"
-            android:layout_marginBottom="4dp"
-            android:layout_marginStart="8dp"
-            android:layout_marginTop="8dp"
-            android:layout_marginEnd="8dp"
-            app:layout_constraintBottom_toTopOf="@id/cardView3"
-            app:layout_constraintRight_toLeftOf="@id/cardView2"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/textView2">
+            android:layout_width="230dp"
+            android:layout_height="wrap_content"
+            android:layout_alignParentStart="true"
+            android:layout_below="@+id/titleTextView"
+            android:layout_marginStart="8dp">
 
-            <android.support.constraint.ConstraintLayout
+            <RelativeLayout
                 android:layout_width="match_parent"
                 android:layout_height="match_parent">
 
@@ -61,12 +39,14 @@
                     android:id="@+id/xpGoalTextView"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:layout_margin="8dp"
                     android:text="@string/xp_goal_caption" />
 
                 <com.timqi.sectorprogressview.ColorfulRingProgressView xmlns:app="http://schemas.android.com/apk/res-auto"
                     android:id="@+id/crpv"
                     android:layout_width="wrap_content"
-                    android:layout_height="0dp"
+                    android:layout_height="230dp"
+                    android:layout_below="@id/xpGoalTextView"
                     app:bgColor="#e1e1e1"
                     app:fgColorEnd="#ff4800"
                     app:fgColorStart="#ffe400"
@@ -83,7 +63,13 @@
                     android:id="@+id/xpTextView"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:layout_alignBottom="@id/crpv"
+                    android:layout_alignEnd="@id/crpv"
+                    android:layout_alignStart="@id/crpv"
+                    android:layout_alignTop="@id/crpv"
+                    android:gravity="center"
                     android:text="@string/xp"
+                    android:textAlignment="gravity"
                     android:textAppearance="@style/TextAppearance.AppCompat.Headline"
                     app:layout_constraintBottom_toBottomOf="@+id/crpv"
                     app:layout_constraintEnd_toEndOf="@+id/crpv"
@@ -91,25 +77,19 @@
                     app:layout_constraintTop_toTopOf="@+id/crpv" />
 
 
-            </android.support.constraint.ConstraintLayout>
+            </RelativeLayout>
 
         </android.support.v7.widget.CardView>
 
         <android.support.v7.widget.CardView
             android:id="@+id/cardView2"
-            android:layout_width="0dp"
-            android:layout_height="0dp"
-            android:layout_marginBottom="4dp"
-            android:layout_marginEnd="8dp"
-            android:layout_marginLeft="8dp"
-            android:layout_marginTop="8dp"
-            app:layout_constraintBottom_toTopOf="@id/cardView4"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintLeft_toRightOf="@id/cardView"
-            app:layout_constraintTop_toBottomOf="@+id/textView2"
-            app:layout_constraintVertical_chainStyle="spread_inside">
+            android:layout_width="160dp"
+            android:layout_height="wrap_content"
+            android:layout_alignStart="@+id/cardView3"
+            android:layout_below="@+id/cardView3"
+            android:layout_marginTop="8dp">
 
-            <android.support.constraint.ConstraintLayout
+            <RelativeLayout
                 android:layout_width="match_parent"
                 android:layout_height="match_parent">
 
@@ -117,49 +97,45 @@
                     android:id="@+id/textView4"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="You are currently recycling 45% of your waste" />
+                    android:layout_margin="8dp"
+                    android:text="You recycle 45% of your waste" />
 
                 <com.timqi.sectorprogressview.ColorfulRingProgressView
                     android:id="@+id/crpv2"
                     android:layout_width="wrap_content"
-                    android:layout_height="0dp"
+                    android:layout_height="160dp"
+                    android:layout_below="@id/textView4"
                     app:bgColor="#e1e1e1"
                     app:fgColorEnd="#ff4800"
                     app:fgColorStart="#ffe400"
-                    app:layout_constraintBottom_toBottomOf="parent"
-                    app:layout_constraintDimensionRatio="1:1"
-                    app:layout_constraintLeft_toLeftOf="parent"
-                    app:layout_constraintRight_toRightOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/textView4"
-                    app:percent="75"
+                    app:percent="45"
                     app:startAngle="0"
                     app:strokeWidth="15dp" />
 
-            </android.support.constraint.ConstraintLayout>
+            </RelativeLayout>
         </android.support.v7.widget.CardView>
 
         <android.support.v7.widget.CardView
             android:id="@+id/cardView3"
-            android:layout_width="0dp"
-            android:layout_height="0dp"
-            android:layout_marginBottom="4dp"
-            android:layout_marginEnd="8dp"
-            android:layout_marginStart="8dp"
-            android:layout_marginTop="4dp"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintLeft_toLeftOf="parent"
-            app:layout_constraintRight_toLeftOf="@id/cardView4"
-            app:layout_constraintTop_toBottomOf="@id/cardView">
+            android:layout_width="160dp"
+            android:layout_height="wrap_content"
+            android:layout_alignParentEnd="true"
+            android:layout_below="@+id/titleTextView"
+            android:layout_marginEnd="8dp">
 
-            <android.support.constraint.ConstraintLayout
+            <RelativeLayout
                 android:layout_width="match_parent"
-                android:layout_height="match_parent">
+                android:layout_height="wrap_content">
 
                 <TextView
                     android:id="@+id/textView6"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:layout_alignParentStart="true"
+                    android:layout_alignParentTop="true"
+                    android:layout_margin="8dp"
                     android:text="Your neighbourhood recycles 65% of their waste, compared to your 38%. Keep up!"
+                    android:visibility="gone"
                     app:layout_constraintBottom_toTopOf="@+id/chart"
                     app:layout_constraintLeft_toLeftOf="parent"
                     app:layout_constraintRight_toRightOf="parent"
@@ -167,62 +143,42 @@
 
                 <com.github.mikephil.charting.charts.BarChart
                     android:id="@+id/chart"
-                    android:layout_width="200dp"
-                    android:layout_height="0dp"
-                    app:layout_constraintBottom_toBottomOf="parent"
-                    app:layout_constraintLeft_toLeftOf="parent"
-                    app:layout_constraintRight_toRightOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/textView6" />
-            </android.support.constraint.ConstraintLayout>
+                    android:layout_width="match_parent"
+                    android:layout_height="62dp"
+                    android:layout_below="@id/textView6" />
+            </RelativeLayout>
 
 
         </android.support.v7.widget.CardView>
 
-        <android.support.v7.widget.CardView
-            android:id="@+id/cardView4"
-            android:layout_width="0dp"
+        <TextView
+            android:id="@+id/textView2"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="4dp"
-            android:layout_marginEnd="8dp"
-            android:layout_marginStart="0dp"
-            android:layout_marginTop="4dp"
-            app:layout_constraintBottom_toTopOf="@id/cardView5"
-            app:layout_constraintLeft_toRightOf="@+id/cardView3"
-            app:layout_constraintRight_toRightOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/cardView2">
+            android:layout_alignStart="@+id/cardView"
+            android:layout_below="@+id/cardView2"
+            android:layout_marginTop="9dp"
+            android:text="Current item" />
 
-            <TextView
-                android:id="@+id/textView7"
-                android:layout_width="180dp"
-                android:layout_height="39dp"
-                android:text="Your next collection day is FRIDAY."
-                tools:layout_editor_absoluteX="196dp"
-                tools:layout_editor_absoluteY="332dp" />
-        </android.support.v7.widget.CardView>
-
-        <android.support.v7.widget.CardView
-            android:id="@+id/cardView5"
-            android:layout_width="0dp"
+        <ListView
+            android:id="@+id/listView"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="4dp"
-            android:layout_marginEnd="8dp"
-            android:layout_marginStart="8dp"
-            android:layout_marginTop="4dp"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintHorizontal_bias="1.0"
-            app:layout_constraintLeft_toRightOf="@id/cardView3"
-            app:layout_constraintRight_toRightOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/cardView4">
-
-            <TextView
-                android:id="@+id/textView8"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="You've saved 0.02 trees by your paper recycling!" />
-        </android.support.v7.widget.CardView>
+            android:layout_alignParentStart="true"
+            android:layout_below="@+id/textView2">
 
 
-    </android.support.constraint.ConstraintLayout>
+        </ListView>
+
+        <ListView
+            android:id="@+id/listView2"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignStart="@+id/listView"
+            android:layout_below="@+id/listView" />
+
+
+    </RelativeLayout>
 
 
 </FrameLayout>

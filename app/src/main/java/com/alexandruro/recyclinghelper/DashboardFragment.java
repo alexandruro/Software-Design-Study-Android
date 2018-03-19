@@ -9,6 +9,8 @@ import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ArrayAdapter;
+import android.widget.ListView;
 import android.widget.TextView;
 
 import com.github.mikephil.charting.charts.BarChart;
@@ -17,6 +19,9 @@ import com.github.mikephil.charting.components.YAxis;
 import com.github.mikephil.charting.data.BarData;
 import com.github.mikephil.charting.data.BarDataSet;
 import com.github.mikephil.charting.data.BarEntry;
+import com.github.mikephil.charting.data.Entry;
+import com.github.mikephil.charting.formatter.IValueFormatter;
+import com.github.mikephil.charting.utils.ViewPortHandler;
 import com.timqi.sectorprogressview.ColorfulRingProgressView;
 
 import java.util.ArrayList;
@@ -74,13 +79,31 @@ public class DashboardFragment extends Fragment implements NamedFragment {
         // Chart
         BarChart chart = (BarChart) getView().findViewById(R.id.chart);
 
-        List<BarEntry> entries = new ArrayList<>();
-        entries.add(new BarEntry(1, 38));
-        entries.add(new BarEntry(2, 65));
+
+        final List<BarEntry> entries = new ArrayList<>();
+        entries.add(new BarEntry(1, 38, "label"));
+        entries.add(new BarEntry(2, 65, "label"));
 
         BarDataSet barDataSet = new BarDataSet(entries, "label");
         barDataSet.setColor(Color.RED);
         barDataSet.setValueTextColor(Color.BLACK);
+
+        barDataSet.setValueFormatter(new IValueFormatter() {
+            @Override
+            public String getFormattedValue(float value, Entry entry, int dataSetIndex, ViewPortHandler viewPortHandler) {
+                String percent = String.valueOf((int)value)+"%";
+                String who;
+                if(entry.getX()==1)
+                    who = "You: ";
+                else
+                    who = "City: ";
+                return who+percent;
+            }
+        });
+
+
+        String[] labels = {"one", "two"};
+        barDataSet.setStackLabels(labels);
 
         BarData barData = new BarData(barDataSet);
         chart.setData(barData);
@@ -88,12 +111,13 @@ public class DashboardFragment extends Fragment implements NamedFragment {
         XAxis xAxis = chart.getXAxis();
         xAxis.setPosition(XAxis.XAxisPosition.BOTTOM);
         xAxis.setTextSize(10f);
-        xAxis.setDrawAxisLine(true);
+        xAxis.setDrawAxisLine(false);
         xAxis.setDrawGridLines(false);
         xAxis.setDrawLabels(false);
 
         YAxis leftAxis = chart.getAxisLeft();
         leftAxis.setEnabled(false);
+        leftAxis.setAxisMinimum(0);
 
         YAxis rightAxis = chart.getAxisRight();
         rightAxis.setEnabled(false);
@@ -103,6 +127,17 @@ public class DashboardFragment extends Fragment implements NamedFragment {
         chart.getLegend().setEnabled(false);
 
         chart.invalidate(); // refresh
+
+
+
+        ListView list1 = getView().findViewById(R.id.listView);
+        CharSequence[] items = {"Jar of pickles"};
+        list1.setAdapter(new ArrayAdapter<CharSequence>(getContext(), android.R.layout.simple_list_item_1, items));
+
+        ListView list2 = getView().findViewById(R.id.listView2);
+        CharSequence[] discounts = {"50% discount for \"Big John's\" cheeseburger", "50% discount for \"Big John's\" cheeseburger", "50% discount for \"Big John's\" cheeseburger"};
+        list2.setAdapter(new ArrayAdapter<CharSequence>(getContext(), android.R.layout.simple_list_item_1, discounts));
+
     }
 
     public void redrawPointsGoal() {
