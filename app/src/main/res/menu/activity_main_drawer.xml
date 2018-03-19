@@ -10,16 +10,16 @@
             android:title="Dashboard" />
         <item
             android:id="@+id/nav_test_points"
-            android:icon="@drawable/ic_warning_black_24dp"
-            android:title="Points"/>
+            android:icon="@drawable/ic_attach_money_black_24dp"
+            android:title="Points" />
         <item
             android:id="@+id/nav_assistant"
-            android:icon="@drawable/ic_warning_black_24dp"
-            android:title="Assistant"/>
+            android:icon="@drawable/ic_person_black_24dp"
+            android:title="Assistant" />
         <item
             android:id="@+id/nav_test_shopping_list"
-            android:icon="@drawable/ic_warning_black_24dp"
-            android:title="Shopping list"/>
+            android:icon="@drawable/ic_shopping_cart_black_24dp"
+            android:title="Shopping list" />
         <item
             android:checkable="false"
             android:id="@+id/nav_settings"
@@ -27,6 +27,24 @@
             android:title="Settings" />
 
     </group>
+
+    <item
+        android:enabled="false"
+        android:title="Actions">
+        <menu
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+            <item
+                android:id="@+id/nav_share"
+                android:icon="@drawable/ic_menu_share"
+                android:title="Share" />
+            <item
+                android:id="@+id/nav_recycle"
+                android:icon="@drawable/ic_help_black_24dp"
+                android:title="Help &amp; Feedback" />
+
+        </menu>
+    </item>
 
     <item android:title="Testing">
         <menu>
@@ -64,45 +82,7 @@
         </menu>
     </item>
 
-    <group android:enabled="false">
-        <item
-            android:id="@+id/nav_account"
-            android:icon="@drawable/ic_menu_gallery"
-            android:title="Account" />
-        <item
-            android:id="@+id/nav_vouchers"
-            android:icon="@drawable/ic_menu_gallery"
-            android:title="Vouchers" />
-        <item
-            android:id="@+id/nav_tips"
-            android:icon="@drawable/ic_menu_gallery"
-            android:title="Tips and Guides" />
-        <item
-            android:id="@+id/nav_stats"
-            android:icon="@drawable/ic_menu_gallery"
-            android:title="Statistics" />
-        <item
-            android:id="@+id/nav_achievements"
-            android:icon="@drawable/ic_menu_gallery"
-            android:title="Achievements" />
-        <item
-            android:id="@+id/nav_about"
-            android:icon="@drawable/ic_menu_gallery"
-            android:title="About" />
-    </group>
 
-    <item android:title="Actions" android:enabled="false">
-        <menu>
-            <item
-                android:id="@+id/nav_recycle"
-                android:icon="@drawable/ic_menu_camera"
-                android:title="Recycle" />
-            <item
-                android:id="@+id/nav_share"
-                android:icon="@drawable/ic_menu_share"
-                android:title="Share" />
-        </menu>
-    </item>
 
 
 

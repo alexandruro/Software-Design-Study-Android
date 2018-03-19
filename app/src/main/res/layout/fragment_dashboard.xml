@@ -20,7 +20,7 @@
             android:layout_height="wrap_content"
             android:layout_alignParentTop="true"
             android:layout_centerHorizontal="true"
-            android:layout_marginBottom="8dp"
+            android:layout_marginBottom="16dp"
             android:layout_marginTop="16dp"
             android:text="Welcome back, Alex!"
             android:textAppearance="@style/TextAppearance.AppCompat.Display1" />
@@ -159,7 +159,7 @@
             android:layout_height="wrap_content"
             android:layout_alignStart="@+id/cardView"
             android:layout_below="@+id/cardView2"
-            android:layout_marginTop="9dp"
+            android:layout_marginTop="32dp"
             android:text="Current item" />
 
         <ListView
@@ -167,7 +167,8 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_alignParentStart="true"
-            android:layout_below="@+id/textView2">
+            android:layout_below="@+id/textView2"
+            android:layout_marginBottom="16dp">
 
 
         </ListView>

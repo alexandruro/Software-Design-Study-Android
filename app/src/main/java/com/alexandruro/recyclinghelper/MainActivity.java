@@ -338,10 +338,6 @@ public class MainActivity extends AppCompatActivity
                 fragment = new AssistantFragment();
                 break;
 
-
-            case R.id.nav_account:
-                fragment = new AccountFragment();
-                break;
             case R.id.nav_settings:
                 Intent intent = new Intent(this, SettingsActivity.class);
                 startActivity(intent);
