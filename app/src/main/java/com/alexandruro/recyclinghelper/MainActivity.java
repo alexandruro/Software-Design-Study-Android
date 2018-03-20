@@ -1,5 +1,6 @@
 package com.alexandruro.recyclinghelper;
 
+import android.app.Notification;
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
@@ -8,6 +9,7 @@ import android.app.VoiceInteractor;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.net.Uri;
 import android.os.Bundle;
@@ -289,9 +291,11 @@ public class MainActivity extends AppCompatActivity
                 String CHANNEL_ID = "reminder_channel";
                 NotificationCompat.Builder mBuilder =
                         new NotificationCompat.Builder(this, CHANNEL_ID)
-                                .setSmallIcon(R.drawable.ic_menu_send)
+                                .setSmallIcon(R.drawable.ic_stat_name)
+                                .setColor(Color.GREEN)
                                 .setContentTitle("Recycle something!")
-                                .setContentText("You have not recycled in a while!");
+                                .setStyle(new NotificationCompat.BigTextStyle().bigText("Glass is 100% recyclable, endlessly. It can be made into new bottles again and again without any loss in quality."))
+                                .setContentText("Glass is 100% recyclable, endlessly. It can be made into new bottles again and again without any loss in quality.");
 
                 Intent resultIntent = new Intent(this, MainActivity.class);
                 TaskStackBuilder stackBuilder = TaskStackBuilder.create(this);
