@@ -153,7 +153,7 @@ public class SettingsActivity extends AppCompatPreferenceActivity {
             // updated to reflect the new value, per the Android Design
             // guidelines.
             bindPreferenceSummaryToValue(findPreference("username"));
-            bindPreferenceSummaryToValue(findPreference("password"));
+            //bindPreferenceSummaryToValue(findPreference("password"));
             bindPreferenceSummaryToValue(findPreference("serverIp"));
         }
 

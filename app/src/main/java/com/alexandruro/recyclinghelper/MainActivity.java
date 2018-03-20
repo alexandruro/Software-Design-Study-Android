@@ -182,10 +182,10 @@ public class MainActivity extends AppCompatActivity
                                                 int value = entry.getInt("value");
                                                 Toast.makeText(MainActivity.this, "The item is recyclable. " + value + " points were added to your account.", Toast.LENGTH_LONG).show();
                                                 setXp(xp + value);
-                                                int user_id = entry.getInt("item_id");
+                                                int item_id = entry.getInt("item_id");
 
                                                 // Add to shopping list
-                                                String query = String.format("{\"type\":\"insert\",\"columns\":[\"user_id\",\"item_id\"],\"values\":[1,%1$d]}", user_id);
+                                                String query = String.format("{\"type\":\"insert\",\"columns\":[\"user_id\",\"item_id\"],\"values\":[2,%1$d]}", item_id);
                                                 String encodedquery = null;
                                                 try {
                                                     encodedquery = URLEncoder.encode(query, "UTF-8");

@@ -3,10 +3,11 @@
     xmlns:tools="http://schemas.android.com/tools"
     tools:showIn="navigation_view">
 
-    <group android:checkableBehavior="single">
+    <group android:checkableBehavior="single"
+        android:id="@+id/menu1">
         <item
             android:id="@+id/nav_dashboard"
-            android:icon="@drawable/ic_menu_camera"
+            android:icon="@drawable/ic_home_black_24dp"
             android:title="Dashboard" />
         <item
             android:id="@+id/nav_test_points"
@@ -20,31 +21,38 @@
             android:id="@+id/nav_test_shopping_list"
             android:icon="@drawable/ic_shopping_cart_black_24dp"
             android:title="Shopping list" />
-        <item
-            android:checkable="false"
-            android:id="@+id/nav_settings"
-            android:icon="@drawable/ic_menu_manage"
-            android:title="Settings" />
+
 
     </group>
 
-    <item
-        android:enabled="false"
-        android:title="Actions">
-        <menu
-            android:layout_width="match_parent"
-            android:layout_height="match_parent">
-            <item
-                android:id="@+id/nav_share"
-                android:icon="@drawable/ic_menu_share"
-                android:title="Share" />
-            <item
-                android:id="@+id/nav_recycle"
-                android:icon="@drawable/ic_help_black_24dp"
-                android:title="Help &amp; Feedback" />
+    <group
+        android:id="@+id/menu2"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+        <item
+            android:id="@+id/nav_settings"
+            android:checkable="false"
+            android:icon="@drawable/ic_settings_black_24dp"
+            android:title="Settings" />
+        <item
+            android:id="@+id/nav_share"
+            android:icon="@drawable/ic_menu_share"
+            android:title="Share" />
+        <item
+            android:id="@+id/nav_recycle"
+            android:icon="@drawable/ic_help_black_24dp"
+            android:title="Help &amp; Feedback" />
 
-        </menu>
-    </item>
+        <item android:title="" />
+        <item android:title="" />
+        <item android:title="" />
+        <item android:title="" />
+        <item android:title="" />
+        <item android:title="" />
+
+    </group>
+
+
 
     <item android:title="Testing">
         <menu>
@@ -55,11 +63,11 @@
             <item
                 android:id="@+id/nav_test_add_xp"
                 android:icon="@drawable/ic_warning_black_24dp"
-                android:title="Add 20 points"/>
+                android:title="Add 20 points" />
             <item
                 android:id="@+id/nav_test_subtract_xp"
                 android:icon="@drawable/ic_warning_black_24dp"
-                android:title="Subtract 20 points"/>
+                android:title="Subtract 20 points" />
 
             <!--<item-->
             <!--android:id="@+id/nav_test_barcode"-->
@@ -81,9 +89,6 @@
 
         </menu>
     </item>
-
-
-
 
 
 </menu>

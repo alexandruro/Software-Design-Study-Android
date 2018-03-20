@@ -31,6 +31,8 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.io.UnsupportedEncodingException;
+import java.net.URLEncoder;
 import java.util.ArrayList;
 
 
@@ -38,7 +40,12 @@ public class ShoppingListFragment extends Fragment implements NamedFragment {
 
     private OnFragmentInteractionListener mListener;
 
-    RequestQueue queue;
+    private SwipeRefreshLayout swipeRefreshLayout;
+
+    private RequestQueue queue;
+
+    private ArrayList<ShoppingItem> shoppingList;
+    private ShoppingListAdapter adapter;
 
     public ShoppingListFragment() {
         // Required empty public constructor
@@ -52,150 +59,126 @@ public class ShoppingListFragment extends Fragment implements NamedFragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        // Inflate the layout for this fragment
+
+        // Views
         View view = inflater.inflate(R.layout.fragment_shopping_list, container, false);
+        getActivity().setTitle("Shopping list");
 
-        final ArrayList<ShoppingItem> shoppingList = new ArrayList<>();
-        final ShoppingListAdapter adapter = new ShoppingListAdapter(getContext(), shoppingList);
+        shoppingList = new ArrayList<>();
+        adapter = new ShoppingListAdapter(getContext(), shoppingList);
+        queue = Volley.newRequestQueue(getActivity());
 
-        getShoppingList(shoppingList, adapter);
+        ((ListView) view.findViewById(R.id.shopping_list_view)).setAdapter(adapter);
 
-        ((ListView)view.findViewById(R.id.shopping_list_view)).setAdapter(adapter);
 
-        ((Button)view.findViewById(R.id.clearShoppingListButton)).setOnClickListener(new View.OnClickListener() {
+        (view.findViewById(R.id.clearShoppingListButton)).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
 
             }
         });
 
-        ((SwipeRefreshLayout)view.findViewById(R.id.swiperefreshlayout)).setOnRefreshListener(
+        swipeRefreshLayout = view.findViewById(R.id.swiperefreshlayout);
+
+        getShoppingList();
+
+        swipeRefreshLayout.setOnRefreshListener(
                 new SwipeRefreshLayout.OnRefreshListener() {
                     @Override
                     public void onRefresh() {
-                        // TODO: refresh
+                        getShoppingList();
                     }
                 }
         );
 
-        getActivity().setTitle("Shopping list");
-
-        queue = Volley.newRequestQueue(getActivity());
-
         return view;
     }
 
-    private void getShoppingList(final ArrayList<ShoppingItem> adaptedList, final ShoppingListAdapter adapter) {
-
-        final RequestQueue queue = Volley.newRequestQueue(getActivity());
+    private void getShoppingList() {
 
         SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(getActivity());
         String baseIp = settings.getString("serverIp", null);
 
-        if(baseIp==null || baseIp.equals(" ")) {
+        if (baseIp == null || baseIp.equals(" ")) {
             Toast.makeText(getActivity(), "You did not set an IP address", Toast.LENGTH_SHORT).show();
             return;
         }
 
-        String url = "http://" + baseIp + "/tables/shoppings?query=%7B%22type%22%3A%22select%22%2C%22columns%22%3A%5B%22item_id%22%5D%7D";
+        final String query = String.format("{\"type\":\"select\",\"columns\":[\"item_id\"],\"conditions\":[{\"column\":\"user_id\",\"compareOperator\":\"=\",\"compareValue\":%d}]}", 2);
 
-        StringRequest request = new StringRequest(Request.Method.GET, url,
-                new Response.Listener<String>()
-                {
+        String encodedquery = null;
+        try {
+            encodedquery = URLEncoder.encode(query, "UTF-8");
+        } catch (UnsupportedEncodingException e) {
+            e.printStackTrace();
+        }
+        String encodedurl = "http://" + baseIp + "/tables/shoppings?query=" + encodedquery;
+
+        JsonObjectRequest request = new JsonObjectRequest(Request.Method.GET, encodedurl, null,
+                new Response.Listener<JSONObject>() {
                     @Override
-                    public void onResponse(String response) {
-                        // TODO: interpret json
+                    public void onResponse(JSONObject response) {
 
-                        if(response.contains("not found")) {
-                            // TODO: show "empty list" message
-                            Toast.makeText(getActivity(), "The shopping list is empty", Toast.LENGTH_SHORT).show();
-                            return;
-                        }
-
-                        /*
-                        found:
-                        {"entries":[{"item_id":13,"barcode":5000204689204,"value":25}]}
-                         */
+                        Log.d("response", response.toString());
 
                         JSONArray items = null;
                         try {
-                            JSONObject jsonObject = new JSONObject(response.split("\n")[1]);
-                            items = jsonObject.getJSONArray("entries");
-                            for(int i=0;i<items.length();i++) {
-                                String barcode = ((JSONObject)items.get(i)).getString("barcode");
-                                //callApi(adaptedList, adapter, "5000204689204");
-                                callApi(adaptedList, adapter, barcode);
+                            items = response.getJSONArray("entries");
+                            for (int i = 0; i < items.length(); i++) {
+                                //String item_id = ((JSONObject)items.get(i)).getString("item_id");
+                                String name = ((JSONObject)items.get(i)).getString("name");
+                                String imageLink = ((JSONObject)items.get(i)).getString("image_web_link");
+
+                                ShoppingItem item = new ShoppingItem(name, imageLink);
+                                retrieveImage(item);
                             }
+                            swipeRefreshLayout.setRefreshing(false);
                         } catch (JSONException e) {
                             e.printStackTrace();
                         }
 
-
-
                     }
                 },
-                new Response.ErrorListener()
-                {
+                new Response.ErrorListener() {
                     @Override
                     public void onErrorResponse(VolleyError error) {
                         // TODO: delete this once it works
                         //serverShoppingList.add("5000204689204");
                         //callApi(adaptedList, adapter, "5000204689204");
                         // TODO: throw error
-                        if(error!=null && error.getMessage()!=null) {
+                        if (error != null && error.getMessage() != null) {
                             Log.d("Error.Response", error.getMessage());
                             Toast.makeText(getContext(), error.getMessage(), Toast.LENGTH_SHORT).show();
-                        }
-                        else {
-                            if(getContext()!=null)
+                        } else {
+                            if (getContext() != null)
                                 Toast.makeText(getContext(), "Unknown error..", Toast.LENGTH_SHORT).show();
                         }
                     }
                 }
         );
         queue.add(request);
+
     }
 
-    private void callApi(final ArrayList<ShoppingItem> shoppingList, final ShoppingListAdapter adapter, String barcode) {
+    private void retrieveImage(final ShoppingItem item) {
 
-        String url ="https://www.barcodelookup.com/restapi?barcode=" + barcode + "&key=jifwdohph0d96leisdxhdtjnc3xapk";
+        String url = item.getImageLink();
 
-
-        JsonObjectRequest jsObjRequest = new JsonObjectRequest
-                (Request.Method.GET, url, null, new Response.Listener<JSONObject>() {
-
-                    @Override
-                    public void onResponse(JSONObject response) {
-                        try {
-                            final String name = response.getJSONArray("result").getJSONObject(0).getJSONObject("details").getString("product_name");
-                            String imageUrl = response.getJSONArray("result").getJSONObject(0).getJSONObject("images").getString("0");
-
-                            ImageRequest request = new ImageRequest(imageUrl, new Response.Listener<Bitmap>() {
-                                @Override
-                                public void onResponse(Bitmap response) {
-                                    shoppingList.add(new ShoppingItem(name, response));
-                                    adapter.notifyDataSetChanged();
-                                }
-                            }, 100, 100, ImageView.ScaleType.CENTER, Bitmap.Config.RGB_565, new Response.ErrorListener() {
-                                @Override
-                                public void onErrorResponse(VolleyError error) {
-                                    Log.d("Error", "Error while fetching image");
-                                }
-                            });
-                            queue.add(request);
-                        } catch (JSONException e) {
-                            e.printStackTrace();
-                        }
-                    }
-                }, new Response.ErrorListener() {
-
-                    @Override
-                    public void onErrorResponse(VolleyError error) {
-                    }
-                });
-
-        // Add the request to the RequestQueue.
-        queue.add(jsObjRequest);
+        ImageRequest request = new ImageRequest(url, new Response.Listener<Bitmap>() {
+            @Override
+            public void onResponse(Bitmap response) {
+                item.setImage(response);
+                shoppingList.add(item);
+                adapter.notifyDataSetChanged();
+            }
+        }, 100, 100, ImageView.ScaleType.CENTER, Bitmap.Config.RGB_565, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                Log.d("Error", "Error while fetching image");
+                Toast.makeText(getActivity(), "Error while fetching image", Toast.LENGTH_SHORT).show();
+            }
+        });
+        queue.add(request);
     }
 
     // TODO: Rename method, update argument and hook method into UI event
